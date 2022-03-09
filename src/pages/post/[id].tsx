@@ -1,16 +1,17 @@
 import { withUrqlClient } from "next-urql";
 import React from "react";
 import { createUrlClient } from "../../utils/createUrlClient";
-import { useRouter } from "next/router";
-import { usePostQuery } from "../../generated/graphql";
 import { Layout } from "../../components/Layout";
 import { Box, Heading } from "@chakra-ui/react";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
+import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
+import { useMeQuery } from "../../generated/graphql";
 
 interface PostProps {}
 
 export const Post: React.FC<PostProps> = ({}) => {
   const [{ data, error, fetching }] = useGetPostFromUrl();
+  const [{ data: meData }] = useMeQuery();
 
   if (fetching) {
     return <Layout>Loading...</Layout>;
@@ -29,7 +30,10 @@ export const Post: React.FC<PostProps> = ({}) => {
   return (
     <Layout>
       <Heading mb={4}>{data.post.title}</Heading>
-      {data.post.text}
+      <Box mb={4}>{data.post.text}</Box>
+      {!(meData?.me?.id === data.post.creator.id) ? null : (
+        <EditDeletePostButtons id={data.post.id} />
+      )}
     </Layout>
   );
 };

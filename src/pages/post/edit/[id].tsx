@@ -1,14 +1,11 @@
 import { Box, Button } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
-import router, { useRouter } from "next/router";
+import router from "next/router";
 import React from "react";
 import { InputField } from "../../../components/InputField";
 import { Layout } from "../../../components/Layout";
-import {
-  usePostQuery,
-  useUpdatePostMutation,
-} from "../../../generated/graphql";
+import { useUpdatePostMutation } from "../../../generated/graphql";
 import { createUrlClient } from "../../../utils/createUrlClient";
 import { useGetIntId } from "../../../utils/useGetIntId";
 import { useGetPostFromUrl } from "../../../utils/useGetPostFromUrl";
@@ -49,7 +46,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
           });
 
           if (!error) {
-            router.push("/");
+            router.back();
           }
         }}
       >

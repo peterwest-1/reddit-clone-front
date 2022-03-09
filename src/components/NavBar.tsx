@@ -4,10 +4,12 @@ import React from "react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
+import { useRouter } from "next/router";
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
+  const router = useRouter();
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
@@ -36,8 +38,9 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 
         <Box mr={2}>{data.me.username}</Box>
         <Button
-          onClick={() => {
-            logout();
+          onClick={async () => {
+            await logout();
+            router.reload();
           }}
           variant="link"
           isLoading={logoutFetching}
@@ -49,7 +52,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   }
   return (
     <Flex zIndex={1} position="sticky" top={0} bg="tan" p={4} ml={"auto"}>
-      <Flex flex={1} margin="auto" align="center" maxW={800}>
+      <Flex flex={1} margin="auto" align="center" maxW={1000}>
         <NextLink href="/">
           <Link>
             <Heading>RedditClone</Heading>
